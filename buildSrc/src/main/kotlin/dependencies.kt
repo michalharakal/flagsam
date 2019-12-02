@@ -25,7 +25,7 @@ object BuildPlugins {
 }
 
 object AndroidSdk {
-    const val min = 19
+    const val min = 21
     const val compile = 29
     const val target = compile
     const val buildTool = "29.0.2"

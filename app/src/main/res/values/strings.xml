@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Flaggie</string>
+    <string name="camera_error">error</string>
 </resources>

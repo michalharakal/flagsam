@@ -52,20 +52,6 @@ object Libraries {
     const val kotlinTestAnnotations = "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlinVersion"
     const val kotlinTestAnnotationsJvm = "org.jetbrains.kotlin:kotlin-test-annotations:$kotlinVersion"
 
-
-
-/*
-    'test'      : [
-    'common'     : "org.jetbrains.kotlin::${versions.kotlin}",
-    'annotations': "org.jetbrains.kotlin:kotlin-test-annotations-common:${versions.kotlin}",
-    'jvm'        : "org.jetbrains.kotlin:kotlin-test:${versions.kotlin}",
-    'junit'      : "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
-    'reflect'    : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}",
-    ],
-
- */
-
-
     const val kotlinxCoroutinesCommon = "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlinxCoroutinesVersion"
     const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
 

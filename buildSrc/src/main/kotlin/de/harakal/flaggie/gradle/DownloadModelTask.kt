@@ -22,7 +22,7 @@ open class DownloadModelTask : DefaultTask() {
     lateinit var target: String
 
     init {
-        group = "xxx" // This will be the group name for your task.
+        group = "prepare" // This will be the group name for your task.
         description = "Download Tensorflow model file"
     }
 

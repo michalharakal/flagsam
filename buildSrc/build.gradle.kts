@@ -11,7 +11,7 @@ repositories {
     maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
 }
 
-group = "fun.flaggie.plugin"
+group = "de.harakal.flaggie.gradle.plugin"
 version = "1.0"
 
 dependencies {
@@ -24,7 +24,7 @@ dependencies {
 gradlePlugin {
     plugins {
         register("ModelDownloader") {
-            id = "flaggie.plugin"
+            id = "flaggie-plugin"
             implementationClass = "de.harakal.flaggie.gradle.FlaggiePlugin"
         }
     }

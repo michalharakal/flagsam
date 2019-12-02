@@ -1,5 +1,5 @@
 # AndroidDevChallenge
-![Image of AndroidDevChallenge](https://github.com/michalharakal/flaggie/blob/master/docs/images/adc.png)
+![Image of AndroidDevChallenge](https://bitbucket.org/michal_harakal/flaggie/raw/5c657dd8cb687cd59286cd00ded97b96e3e2c0ec/docs/images/adc.png)
 ### Android application for kids teaching semafore nautilac alphabet funny way
 
 **Tell us what your idea is.   

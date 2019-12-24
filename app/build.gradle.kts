@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("kotlin-kapt")
+    kotlin("android")
+    kotlin("android.extensions")
+    kotlin("kapt")
 }
 
 android {
@@ -38,28 +38,33 @@ android {
         exclude("META-INF/common.kotlin_module")
         exclude("META-INF/*.kotlin_module")
     }
+    aaptOptions {
+        noCompress("tflite")
+        noCompress ("lite")
+    }
 }
 
 dependencies {
-    implementation(project(":semafornet"))
-    implementation ("androidx.appcompat:appcompat:1.1.0")
-    implementation ("androidx.core:core-ktx:1.1.0")
-    implementation ("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation ("com.google.android.material:material:1.0.0")
+    implementation(project(":domain"))
+    implementation(project(":gateways:android-tensorflow"))
+    implementation(project(":gateways:ui-library"))
+
+    implementation ("org.tensorflow:tensorflow-lite:2.0.0")
+    implementation ("org.tensorflow:tensorflow-lite-gpu:2.0.0")
+
+    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.core:core-ktx:1.1.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("com.google.android.material:material:1.0.0")
 
     implementation(Libraries.kotlinStdLib)
-    implementation(Libraries.kotlinxCoroutinesCore)
-    implementation(Libraries.kotlinxSerializeJvm)
-    implementation(Libraries.ktorUtilsJvm)
-    implementation(Libraries.ktorCoreJvm)
-    implementation(Libraries.ktorSerializationJvm)
-    implementation(Libraries.ktorLoggingJvm)
-    implementation(Libraries.ktorOkhttpJvm)
-    implementation(Libraries.okhttInterceptorpJvm)
     implementation("org.slf4j:slf4j-api:1.7.28")
-    implementation ("com.github.tony19:logback-android:1.3.0-3")
+    implementation("com.github.tony19:logback-android:1.3.0-3")
 
     testImplementation(Libraries.kotlinTestJvm)
-    testImplementation(Libraries.kotlinxCoroutinesCore)
-    testImplementation(Libraries.kotlinTestJunit)
+    testImplementation("junit:junit:4.12")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.assertj:assertj-core:3.13.2")
+    testImplementation("org.robolectric:robolectric:4.3")
 }

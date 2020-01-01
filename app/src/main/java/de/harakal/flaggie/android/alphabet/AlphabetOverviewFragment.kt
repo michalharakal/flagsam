@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import de.harakal.flaggie.android.R
-import de.harakal.flaggie.ui.stickman.StickmanView
+import de.harakal.flaggie.widget.StickmanView
 
 /**
  * Fragments  showing a [StickmanView] for particular char from Flag alphabet

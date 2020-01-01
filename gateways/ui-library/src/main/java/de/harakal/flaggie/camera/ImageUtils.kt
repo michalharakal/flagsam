@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package de.harakal.flaggie.ui
+package de.harakal.flaggie.camera
 
 /** Utility class for manipulating images.  */
 object ImageUtils {

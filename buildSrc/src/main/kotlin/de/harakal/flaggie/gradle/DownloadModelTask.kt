@@ -12,7 +12,6 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-
 open class DownloadModelTask : DefaultTask() {
 
     @get:Input

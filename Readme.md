@@ -24,3 +24,7 @@ detected movement of the person (instead of showing the real camera preview pict
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dce7b53dcd0a4f658c126414bcf597fe)](https://www.codacy.com/manual/michalharakal/flagsam?utm_source=github.com&utm_medium=referral&utm_content=michalharakal/flagsam&utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/michalharakal/flagsam.svg?style=svg)](https://circleci.com/gh/michalharakal/flagsam)
+[![Kotlin Version](https://img.shields.io/badge/kotlin-1.3.61-blue.svg)](http://kotlinlang.org/)
+[![Gradle](https://img.shields.io/badge/gradle-6.1-blue.svg)](https://lv.binarybabel.org/catalog/gradle/latest)
+[![API](https://img.shields.io/badge/API-23%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=23)
+[

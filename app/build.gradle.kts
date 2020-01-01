@@ -54,10 +54,11 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.core:core-ktx:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("com.google.android.material:material:1.0.0")
 
     implementation(Libraries.kotlinStdLib)
+
     implementation("org.slf4j:slf4j-api:1.7.28")
     implementation("com.github.tony19:logback-android:1.3.0-3")
 
@@ -67,4 +68,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.assertj:assertj-core:3.13.2")
     testImplementation("org.robolectric:robolectric:4.3")
+
+    androidTestImplementation ("androidx.test.ext:junit:1.1.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.2.0")
 }

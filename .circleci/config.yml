@@ -15,7 +15,7 @@ jobs:
           key: gradle-{{ checksum "build.gradle.kts" }}
       - run:
           name: Run Lint
-          command: ./gradlew lintDevDebug
+          command: ./gradlew lintDebug
       - save_cache:
           paths:
             - ~/.gradle

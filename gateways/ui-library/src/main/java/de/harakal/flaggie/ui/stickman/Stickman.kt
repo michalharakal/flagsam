@@ -1,8 +1,10 @@
 package de.harakal.flaggie.ui.stickman
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import de.harakal.flaggie.ml.Hands
 import kotlin.math.PI
 import kotlin.math.cos
@@ -17,25 +19,31 @@ class Stickman {
     fun drawStickman(canvas: Canvas, pencilCase: PencilCase, hands: Hands) {
         val screenWidth: Int = canvas.width
         val screenHeight: Int = canvas.height
-        // View size in pixels
         var size = min(screenHeight, screenWidth).toFloat() / 2.0f
 
+        canvas.drawColor(Color.BLACK)
         drawFaceBackground(canvas, pencilCase, size)
         drawEyes(canvas, pencilCase, size)
         drawMouth(canvas, pencilCase, size)
         drawBody(canvas, pencilCase, size)
         drawLeft(canvas, pencilCase, hands.leftHand, size)
         drawRight(canvas, pencilCase, hands.rightHand, size)
+        Log.d("YYY", "left=${hands.leftHand}, right=${hands.rightHand}")
     }
 
     private fun drawBody(canvas: Canvas, pencilCase: PencilCase, size: Float) {
+        pencilCase.paint.color = pencilCase.bodyColor
+        pencilCase.paint.style = Paint.Style.STROKE
+        pencilCase.paint.strokeWidth = pencilCase.bodyWidth
+
         canvas.drawLine(
             size / 2.0f,
-            size.toFloat(),
+            size,
             size / 2.0f,
-            size * 3.0f,
+            size / 2.0f + size + 30.0f + 40.0f,
             pencilCase.paint
         )
+
     }
 
     private fun drawLeft(canvas: Canvas, pencilCase: PencilCase, angle: Float, size: Float) {
@@ -46,8 +54,11 @@ class Stickman {
         val handX = (size / 2.0f) * cos((angle * PI / 180))
         val handY = (size / 2.0f) * sin((angle * PI / 180))
         canvas.drawLine(
-            size / 2.0f, size.toFloat() + 30.0f,
-            size / 2.0f + handX.toFloat(), size.toFloat() + 30.0f + handY.toFloat(), pencilCase.paint
+            size / 2.0f,
+            size + 30.0f,
+            size / 2.0f + handX.toFloat(),
+            size + 20.0f + handY.toFloat(),
+            pencilCase.paint
         )
 
     }
@@ -57,11 +68,16 @@ class Stickman {
         pencilCase.paint.style = Paint.Style.STROKE
         pencilCase.paint.strokeWidth = pencilCase.handWidth
 
-        val handX = (size / 2.0f) * cos((angle * PI / 180))
-        val handY = (size / 2.0f) * sin((angle * PI / 180))
+        val armLength = size/2
+        val angleRad = ((angle - 90) * PI) / 180
+        val dX = sin(angleRad) * armLength
+        val dY = cos(angleRad) * armLength
         canvas.drawLine(
-            size / 2.0f, size.toFloat() + 30.0f,
-            size / 2.0f - handX.toFloat(), size.toFloat() + 30.0f + handY.toFloat(), pencilCase.paint
+            size / 2.0f,
+            size + 20.0f,
+            size / 2.0f - dX.toFloat(),
+            size + 20.0f + dY.toFloat(),
+            pencilCase.paint
         )
     }
 

@@ -2,6 +2,7 @@ package de.harakal.flaggie.camera
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageFormat
 import android.graphics.Matrix
@@ -16,12 +17,14 @@ import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
+import de.harakal.flaggie.bitmap.BitmapUtils
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
-class LiveCameraPreview(val context: Context) {
-
-    var listener: ((bitmap:Bitmap)->Unit)? = null
+/**
+ * Domain class dealing with connecnting to camera to receive a image preview
+ */
+class LiveCameraPreview(val context: Context, val listener: ((bitmap: Bitmap) -> Unit)? = null) {
 
     private var previewSize: Size? = null
 
@@ -53,9 +56,8 @@ class LiveCameraPreview(val context: Context) {
         override fun onOpened(cameraDevice: CameraDevice) {
             cameraOpenCloseLock.release()
             this@LiveCameraPreview.cameraDevice = cameraDevice
-            //createCameraPreviewSession()
+            createCameraPreviewSession()
         }
-
 
         override fun onDisconnected(cameraDevice: CameraDevice) {
             cameraOpenCloseLock.release()
@@ -94,12 +96,6 @@ class LiveCameraPreview(val context: Context) {
      */
     @SuppressLint("MissingPermission")
     fun openCamera() {
-        /*
-        val permissionCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-        if (permissionCamera != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission()
-        }
-         */
         setUpCameraOutputs()
         val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
@@ -217,7 +213,7 @@ class LiveCameraPreview(val context: Context) {
             val image = imageReader.acquireLatestImage() ?: return
             fillBytes(image.planes, yuvBytes)
 
-            ImageUtils.convertYUV420ToARGB8888(
+            BitmapUtils.convertYUV420ToARGB8888(
                 yuvBytes[0]!!,
                 yuvBytes[1]!!,
                 yuvBytes[2]!!,

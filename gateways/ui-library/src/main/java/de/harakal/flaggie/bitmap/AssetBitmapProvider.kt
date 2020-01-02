@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory
 import java.io.IOException
 import java.io.InputStream
 
+/**
+ * Object for loading prepared images with poses from assets
+ */
 object AssetBitmapProvider {
     fun getBitmapFromAsset(context: Context, filePath: String): Bitmap? {
         val assetManager: AssetManager = context.getAssets()

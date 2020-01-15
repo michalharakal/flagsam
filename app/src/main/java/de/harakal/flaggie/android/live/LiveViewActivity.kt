@@ -17,10 +17,13 @@ import de.harakal.flaggie.bitmap.AssetBitmapProvider
 import de.harakal.flaggie.bitmap.BitmapUtils
 import de.harakal.flaggie.camera.LiveCameraPreview
 import de.harakal.flaggie.cartoon.PoseToHandAngles
+import de.harakal.flaggie.ml.Hands
 import de.harakal.flaggie.ml.TensorflowLitePoseEstimator
-import de.harakal.flaggie.pipeline.Pose2Char
+import de.harakal.flaggie.pipeline.Pipeline
+import de.harakal.flaggie.pipeline.Pose2CharStep
 import de.harakal.flaggie.ui.stickman.PencilCase
 import de.harakal.flaggie.ui.stickman.Stickman
+
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257
@@ -45,7 +48,6 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     private val stickman = Stickman()
     private val handAngles = PoseToHandAngles()
-    private val pose2Char = Pose2Char()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +127,9 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         val hands = handAngles.poseToHands(person)
 
         Log.d("XXX", person.toString())
-        Log.d("YYY", pose2Char.pose2Char(hands).toString())
+
+        val pipeline = Pipeline(Pose2CharStep())
+        Log.d("YYY", pipeline.execute(hands).toString())
         surfaceHolder?.let {
             val canvas: Canvas = it.lockCanvas()
             try {

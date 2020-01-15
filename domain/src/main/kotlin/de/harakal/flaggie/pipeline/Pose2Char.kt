@@ -3,8 +3,8 @@ package de.harakal.flaggie.pipeline
 import de.harakal.flaggie.ml.Hands
 import kotlin.math.abs
 
-class Pose2Char {
-    fun pose2Char(hands: Hands): Char? {
+class Pose2CharStep : Step<Hands, Char?> {
+    override fun process(hands: Hands): Char? {
         return chars.firstOrNull {
             abs(it.hands.leftHand - hands.leftHand) < 10.0f && abs(it.hands.rightHand - hands.rightHand) < 10.0f
         }?.char

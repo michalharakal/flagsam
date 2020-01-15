@@ -18,6 +18,7 @@ import de.harakal.flaggie.bitmap.BitmapUtils
 import de.harakal.flaggie.camera.LiveCameraPreview
 import de.harakal.flaggie.cartoon.PoseToHandAngles
 import de.harakal.flaggie.ml.TensorflowLitePoseEstimator
+import de.harakal.flaggie.pipeline.Pose2Char
 import de.harakal.flaggie.ui.stickman.PencilCase
 import de.harakal.flaggie.ui.stickman.Stickman
 
@@ -44,6 +45,7 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     private val stickman = Stickman()
     private val handAngles = PoseToHandAngles()
+    private val pose2Char = Pose2Char()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,7 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         liveCameraPreview = LiveCameraPreview(this) { bitmap -> processImage(bitmap) }
 
         if (allPermissionsGranted()) {
-            surfaceView.post { liveCameraPreview.openCamera() }
+            //surfaceView.post { liveCameraPreview.openCamera() }
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
@@ -64,17 +66,17 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     override fun onResume() {
         super.onResume()
-        liveCameraPreview.startBackgroundThread()
+        //liveCameraPreview.startBackgroundThread()
     }
 
     override fun onPause() {
-        liveCameraPreview.closeCamera()
-        liveCameraPreview.stopBackgroundThread()
+        //liveCameraPreview.closeCamera()
+        // liveCameraPreview.stopBackgroundThread()
         super.onPause()
     }
 
     private fun loadImageFromAsset() {
-        val bmp = AssetBitmapProvider.getBitmapFromAsset(this, "A_a.jpg")
+        val bmp = AssetBitmapProvider.getBitmapFromAsset(this, "A_c.jpg")
         processImage(bmp!!)
     }
 
@@ -88,7 +90,7 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 surfaceView!!.post {
-                    liveCameraPreview.openCamera()
+                   // liveCameraPreview.openCamera()
                 }
             } else {
                 Toast.makeText(
@@ -120,14 +122,17 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
 
         val person = posenet.estimateSinglePose(scaledBitmap)
+        val hands = handAngles.poseToHands(person)
+
         Log.d("XXX", person.toString())
+        Log.d("YYY", pose2Char.pose2Char(hands).toString())
         surfaceHolder?.let {
             val canvas: Canvas = it.lockCanvas()
             try {
                 stickman.drawStickman(
                     canvas,
                     pencilCase,
-                    handAngles.poseToHands(person)
+                    hands
                 )
             } finally {
                 surfaceHolder!!.unlockCanvasAndPost(canvas)
@@ -144,6 +149,6 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
         this.surfaceHolder = holder
-        //loadImageFromAsset()
+        loadImageFromAsset()
     }
 }

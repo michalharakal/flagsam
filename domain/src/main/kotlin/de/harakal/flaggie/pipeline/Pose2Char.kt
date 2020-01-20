@@ -1,6 +1,5 @@
 package de.harakal.flaggie.pipeline
 
-import com.sun.jdi.CharType
 import de.harakal.flaggie.ml.ControlSign
 import de.harakal.flaggie.ml.FlagChar
 import de.harakal.flaggie.ml.Hands
@@ -8,10 +7,10 @@ import de.harakal.flaggie.ml.SignType
 import kotlin.math.abs
 
 class Pose2CharStep : Step<Hands, Char?> {
-    override fun process(hands: Hands): Char? {
+    override fun process(input: Hands): Char? {
         return chars.firstOrNull {
-            abs(it.hands.leftHand - hands.leftHand) < 10.0f
-                    && abs(it.hands.rightHand - hands.rightHand) < 10.0f
+            abs(it.hands.leftHand - input.leftHand) < 10.0f
+                    && abs(it.hands.rightHand - input.rightHand) < 10.0f
                     && (it.charType.signType == SignType.CHAR)
         }?.char
     }

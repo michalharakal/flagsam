@@ -5,25 +5,24 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import de.harakal.flaggie.android.R
+import de.harakal.flaggie.android.pipeline.ScaledBitmap2Person
 import de.harakal.flaggie.bitmap.AssetBitmapProvider
 import de.harakal.flaggie.bitmap.BitmapUtils
 import de.harakal.flaggie.camera.LiveCameraPreview
-import de.harakal.flaggie.cartoon.PoseToHandAngles
-import de.harakal.flaggie.ml.Hands
 import de.harakal.flaggie.ml.TensorflowLitePoseEstimator
-import de.harakal.flaggie.pipeline.Pipeline
+import de.harakal.flaggie.pipeline.Person2Hands
 import de.harakal.flaggie.pipeline.Pose2CharStep
+import de.harakal.flaggie.pipeline.into
 import de.harakal.flaggie.ui.stickman.PencilCase
 import de.harakal.flaggie.ui.stickman.Stickman
-
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257
@@ -35,27 +34,33 @@ private const val REQUEST_CODE_PERMISSIONS = 10
  */
 class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
+    private lateinit var scaledBitmap2Person: ScaledBitmap2Person
+    private lateinit var person2Hand: Person2Hands
+    private lateinit var hands2Letter: Pose2CharStep
+    private lateinit var letter2Printer: TextViewLetterPrinter
+
     private val pencilCase = PencilCase()
-    private lateinit var posenet: TensorflowLitePoseEstimator
 
     // This is an array of all the permission specified in the manifest.
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
-
     private var surfaceHolder: SurfaceHolder? = null
     private lateinit var surfaceView: SurfaceView
+    private lateinit var letters: TextView
     private lateinit var liveCameraPreview: LiveCameraPreview
 
     private val stickman = Stickman()
-    private val handAngles = PoseToHandAngles()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_view)
         surfaceView = findViewById(R.id.surfaceView)
+        letters = findViewById(R.id.letters)
         surfaceView.holder.addCallback(this)
-        posenet = TensorflowLitePoseEstimator(this.applicationContext)
+        val posenet = TensorflowLitePoseEstimator(this.applicationContext)
         liveCameraPreview = LiveCameraPreview(this) { bitmap -> processImage(bitmap) }
+
+        createPipeLine(posenet)
 
         if (allPermissionsGranted()) {
             //surfaceView.post { liveCameraPreview.openCamera() }
@@ -64,6 +69,13 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
+    }
+
+    private fun createPipeLine(posenet: TensorflowLitePoseEstimator) {
+        scaledBitmap2Person = ScaledBitmap2Person(posenet)
+        person2Hand = Person2Hands()
+        hands2Letter = Pose2CharStep()
+        letter2Printer = TextViewLetterPrinter(letters)
     }
 
     override fun onResume() {
@@ -92,7 +104,7 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 surfaceView!!.post {
-                   // liveCameraPreview.openCamera()
+                    // liveCameraPreview.openCamera()
                 }
             } else {
                 Toast.makeText(
@@ -123,20 +135,16 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         // Created scaled version of bitmap for model input.
         val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
 
-        val person = posenet.estimateSinglePose(scaledBitmap)
-        val hands = handAngles.poseToHands(person)
+        val hands = scaledBitmap into scaledBitmap2Person::process andThen person2Hand::process
+        hands andThen hands2Letter::process andThen letter2Printer::process
 
-        Log.d("XXX", person.toString())
-
-        val pipeline = Pipeline(Pose2CharStep())
-        Log.d("YYY", pipeline.execute(hands).toString())
         surfaceHolder?.let {
             val canvas: Canvas = it.lockCanvas()
             try {
                 stickman.drawStickman(
                     canvas,
                     pencilCase,
-                    hands
+                    hands.v
                 )
             } finally {
                 surfaceHolder!!.unlockCanvasAndPost(canvas)

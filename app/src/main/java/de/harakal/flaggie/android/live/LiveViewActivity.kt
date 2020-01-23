@@ -3,7 +3,6 @@ package de.harakal.flaggie.android.live
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -13,14 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import de.harakal.flaggie.android.R
+import de.harakal.flaggie.android.pipeline.HandsPainter
 import de.harakal.flaggie.android.pipeline.ScaledBitmap2Person
+import de.harakal.flaggie.android.pipeline.TextViewLetterPrinter
 import de.harakal.flaggie.bitmap.AssetBitmapProvider
 import de.harakal.flaggie.bitmap.BitmapUtils
 import de.harakal.flaggie.camera.LiveCameraPreview
 import de.harakal.flaggie.ml.TensorflowLitePoseEstimator
-import de.harakal.flaggie.pipeline.Person2Hands
-import de.harakal.flaggie.pipeline.Pose2CharStep
-import de.harakal.flaggie.pipeline.into
+import de.harakal.flaggie.pipeline.*
 import de.harakal.flaggie.ui.stickman.PencilCase
 import de.harakal.flaggie.ui.stickman.Stickman
 
@@ -38,6 +37,9 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
     private lateinit var person2Hand: Person2Hands
     private lateinit var hands2Letter: Pose2CharStep
     private lateinit var letter2Printer: TextViewLetterPrinter
+    private lateinit var handsPainter: HandsPainter
+    private lateinit var cropBitmap: CropBitmap
+    private lateinit var scaleBitmap: ScaleBitmap
 
     private val pencilCase = PencilCase()
 
@@ -76,6 +78,9 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
         person2Hand = Person2Hands()
         hands2Letter = Pose2CharStep()
         letter2Printer = TextViewLetterPrinter(letters)
+        handsPainter = HandsPainter(stickman, pencilCase)
+        cropBitmap = CropBitmap(MODEL_HEIGHT, MODEL_WIDTH)
+        scaleBitmap = ScaleBitmap(MODEL_HEIGHT, MODEL_WIDTH)
     }
 
     override fun onResume() {
@@ -128,30 +133,12 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     /** Process image using Posenet library.   */
     private fun processImage(bitmap: Bitmap) {
-        // Crop bitmap.
-        val croppedBitmap =
-            BitmapUtils.cropBitmap(bitmap, MODEL_HEIGHT.toFloat(), MODEL_WIDTH.toFloat())
+        val personPipeline =
+            bitmap into cropBitmap::process andThen scaleBitmap::process andThen scaledBitmap2Person::process
+        val handsPipeline = personPipeline andThen person2Hand::process andThen handsPainter::process
 
-        // Created scaled version of bitmap for model input.
-        val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
-
-        val hands = scaledBitmap into scaledBitmap2Person::process andThen person2Hand::process
-        hands andThen hands2Letter::process andThen letter2Printer::process
-
-        surfaceHolder?.let {
-            val canvas: Canvas = it.lockCanvas()
-            try {
-                stickman.drawStickman(
-                    canvas,
-                    pencilCase,
-                    hands.v
-                )
-            } finally {
-                surfaceHolder!!.unlockCanvasAndPost(canvas)
-            }
-        }
+        handsPipeline andThen hands2Letter::process andThen letter2Printer::process
     }
-
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
     }
@@ -161,6 +148,7 @@ class LiveViewActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
         this.surfaceHolder = holder
+        handsPainter.surfaceHolder = holder
         loadImageFromAsset()
     }
 }

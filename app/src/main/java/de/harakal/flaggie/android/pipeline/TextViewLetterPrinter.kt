@@ -1,4 +1,4 @@
-package de.harakal.flaggie.android.live
+package de.harakal.flaggie.android.pipeline
 
 import android.widget.TextView
 import de.harakal.flaggie.pipeline.Step

@@ -40,7 +40,7 @@ android {
     }
     aaptOptions {
         noCompress("tflite")
-        noCompress ("lite")
+        noCompress("lite")
     }
 }
 
@@ -49,11 +49,12 @@ dependencies {
     implementation(project(":gateways:android-tensorflow"))
     implementation(project(":gateways:ui-library"))
 
-    implementation ("org.tensorflow:tensorflow-lite:2.0.0")
-    implementation ("org.tensorflow:tensorflow-lite-gpu:2.0.0")
+    implementation("org.tensorflow:tensorflow-lite:2.0.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.0.0")
 
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.core:core-ktx:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("com.google.android.material:material:1.0.0")
 
@@ -67,8 +68,8 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.assertj:assertj-core:3.13.2")
-    testImplementation("org.robolectric:robolectric:4.3")
+    testImplementation("org.robolectric:robolectric:4.3.1")
 
-    androidTestImplementation ("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }

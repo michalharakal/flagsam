@@ -1,8 +1,4 @@
-# AndroidDevChallenge
-
-![Image of AndroidDevChallenge](https://github.com/michalharakal/flagsam/blob/master/docs/images/adc.png)
-
-## Idea
+# Flag Sam
 
 **Flag Sam** is a fun game for children based on flag semaphore signals
 

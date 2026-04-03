@@ -5,7 +5,6 @@ import com.diffplug.gradle.spotless.SpotlessPlugin
 
 apply<SpotlessPlugin>()
 
-@Suppress("INACCESSIBLE_TYPE")
 configure<SpotlessExtension> {
     format("misc") {
         target(

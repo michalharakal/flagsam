@@ -1,14 +1,18 @@
 plugins {
-    kotlin("jvm")
+    id("org.jetbrains.kotlin.jvm")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    implementation("org.slf4j:slf4j-api:1.7.28")
+    implementation(libs.slf4j.api)
 
-    testImplementation(Libraries.kotlinTestJvm)
-    testImplementation("junit:junit:4.12")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("io.mockk:mockk:1.9.3")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockk)
+    testImplementation(libs.assertk)
 }

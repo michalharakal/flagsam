@@ -1,7 +1,22 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name = "Flaggie"
 
-include (":domain")
-include (":app")
-include ("gateways:android-tensorflow")
-include ("gateways:ui-library")
-
+include(":domain")
+include(":app")
+include("gateways:android-tensorflow")
+include("gateways:ui-library")

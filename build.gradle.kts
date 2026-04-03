@@ -1,31 +1,15 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-buildscript {
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-        maven("https://maven.fabric.io/public")
-        maven("https://plugins.gradle.org/m2/")
-     }
-    dependencies {
-        classpath (RootBuildPlugins.androidGradlePlugin)
-        classpath (RootBuildPlugins.kotlinGradlePlugin)
-        classpath ("io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE")
-        classpath ("io.fabric.tools:gradle:1.31.0")
-
-    }
+plugins {
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    id("org.jetbrains.kotlin.android") apply false
+    id("org.jetbrains.kotlin.jvm") apply false
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        mavenCentral()
-    }
-
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 
     plugins.apply("plugins.git-hooks")
@@ -33,6 +17,3 @@ allprojects {
     plugins.apply("plugins.ktlint")
     plugins.apply("plugins.spotless")
 }
-
-apply(from = "scripts/gradle/projectDependencyGraph.gradle")
-
